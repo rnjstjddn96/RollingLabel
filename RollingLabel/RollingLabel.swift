@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public final class NumberRollingLabel: UIView {
+public final class RollingLabel: UIView {
     private var cachedText: String = ""
     private var scrollLayers: [CAScrollLayer] = []
     private var configuration: RollingConfiguration!
@@ -36,33 +36,24 @@ public final class NumberRollingLabel: UIView {
         self.layer.mask = gradientLayer
     }
     
-    public init(
-        frame: CGRect = .zero,
-        typography: Typography,
-        color: UIColor,
-        style: Style
-    ) {
+    public init(frame: CGRect = .zero, font: UIFont, color: UIColor, style: Style) {
         super.init(frame: frame)
-        self.setConfiguration(typography: typography, color: color, style: style)
+        self.setConfiguration(font: font, color: color, style: style)
         
-        self.backgroundColor = Color.gray0
+        self.backgroundColor = .white
     }
     
-    private func setConfiguration(
-        typography: Typography,
-        color: UIColor,
-        style: Style
-    ) {
+    private func setConfiguration(font: UIFont, color: UIColor, style: Style) {
         switch style {
         case .autoResize:
             self.configuration = AutoResizeRollingConfiguration(
-                typography: typography,
+                font: font,
                 textColor: color,
                 completion: { [weak self] in
                     self?.invalidateIntrinsicContentSize()
                 })
         case .fixed:
-            self.configuration = FixedRollingConfiguration(typography: typography, textColor: color)
+            self.configuration = FixedRollingConfiguration(font: font, textColor: color)
         }
     }
     
@@ -72,7 +63,7 @@ public final class NumberRollingLabel: UIView {
 }
 
 // MARK: - public
-extension NumberRollingLabel {
+extension RollingLabel {
     public func setText(_ text: String) {
         if cachedText == text { return }
         
@@ -103,7 +94,7 @@ fileprivate extension String {
     }
 }
 
-extension NumberRollingLabel {
+extension RollingLabel {
     public enum Style {
         case autoResize
         case fixed
